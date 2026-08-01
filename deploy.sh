@@ -64,12 +64,20 @@ check_config() {
         exit 1
     fi
 
+    if [ ! -f ".env.prod" ]; then
+        print_error ".env.prod 文件不存在"
+        print_info "请先创建环境变量配置文件:"
+        print_info "  cp .env.prod.example .env.prod"
+        print_info "  nano .env.prod  # 修改配置"
+        exit 1
+    fi
+
     # 检查是否修改了默认密码
-    if grep -q "CHANGE_THIS" docker-compose.prod.yml; then
-        print_warning "检测到配置文件中包含默认密码！"
-        print_warning "请修改 docker-compose.prod.yml 中的以下内容:"
+    if grep -q "CHANGE_THIS" .env.prod; then
+        print_warning "检测到 .env.prod 中包含默认密码！"
+        print_warning "请修改 .env.prod 中的以下内容:"
         print_warning "  - POSTGRES_PASSWORD"
-        print_warning "  - REDIS_CONN_STRING 中的密码"
+        print_warning "  - REDIS_PASSWORD"
         print_warning "  - SESSION_SECRET"
         print_warning "  - INITIAL_ROOT_PASSWORD"
         echo ""
@@ -103,7 +111,7 @@ stop_old_services() {
     print_info "停止旧服务..."
 
     if docker ps -a | grep -q "new-api-peopledata"; then
-        docker-compose -f docker-compose.prod.yml down
+        docker-compose -f docker-compose.prod.yml --env-file .env.prod down
         print_success "旧服务已停止"
     else
         print_info "没有运行中的服务"
@@ -115,7 +123,7 @@ build_image() {
     print_info "开始构建 Docker 镜像..."
     print_info "这可能需要几分钟时间，请耐心等待..."
 
-    docker-compose -f docker-compose.prod.yml build --no-cache
+    docker-compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache
 
     print_success "Docker 镜像构建完成"
 }
@@ -124,7 +132,7 @@ build_image() {
 start_services() {
     print_info "启动服务..."
 
-    docker-compose -f docker-compose.prod.yml up -d
+    docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
 
     print_success "服务启动成功"
 }
@@ -154,7 +162,7 @@ wait_for_health() {
 # 显示服务状态
 show_status() {
     print_info "服务状态:"
-    docker-compose -f docker-compose.prod.yml ps
+    docker-compose -f docker-compose.prod.yml --env-file .env.prod ps
 }
 
 # 显示访问信息
@@ -170,13 +178,13 @@ show_access_info() {
     echo ""
     echo "默认管理员账号:"
     echo "  用户名: root"
-    echo "  密码:   请查看 docker-compose.prod.yml 中的 INITIAL_ROOT_PASSWORD"
+    echo "  密码:   请查看 .env.prod 中的 INITIAL_ROOT_PASSWORD"
     echo ""
     echo "常用命令:"
-    echo "  查看日志: docker-compose -f docker-compose.prod.yml logs -f"
-    echo "  停止服务: docker-compose -f docker-compose.prod.yml down"
-    echo "  重启服务: docker-compose -f docker-compose.prod.yml restart"
-    echo "  查看状态: docker-compose -f docker-compose.prod.yml ps"
+    echo "  查看日志: docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f"
+    echo "  停止服务: docker-compose -f docker-compose.prod.yml --env-file .env.prod down"
+    echo "  重启服务: docker-compose -f docker-compose.prod.yml --env-file .env.prod restart"
+    echo "  查看状态: docker-compose -f docker-compose.prod.yml --env-file .env.prod ps"
     echo ""
     print_warning "⚠️  首次登录后请立即修改管理员密码！"
     echo "========================================="
@@ -185,7 +193,7 @@ show_access_info() {
 # 显示日志
 show_logs() {
     print_info "显示最近日志 (按 Ctrl+C 退出):"
-    docker-compose -f docker-compose.prod.yml logs --tail=50 -f
+    docker-compose -f docker-compose.prod.yml --env-file .env.prod logs --tail=50 -f
 }
 
 # 主函数
