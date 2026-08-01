@@ -40,7 +40,7 @@ export function HowItWorks() {
       num: '2',
       title: t('Connect'),
       desc: t(
-        'Connect through DeepSeek, Qwen, Kimi, and other compatible API routes'
+        'Connect through compatible API routes'
       ),
       icon: <Zap className='size-6' strokeWidth={1.5} />,
     },

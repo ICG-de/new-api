@@ -1014,7 +1014,7 @@
     "Confirmed payment compliance": "确认支付合规",
     "Conflict": "矛盾",
     "Connect": "连接",
-    "Connect through DeepSeek, Qwen, Kimi, and other compatible API routes": "通过 DeepSeek、Qwen、Kimi 以及其他兼容 API 路由接入",
+    "Connect through compatible API routes": "通过兼容 API 路由接入",
     "Connected to io.net service normally.": "已正常连接 io.net 服务。",
     "Connection closed": "连接已关闭",
     "Connection error": "连接错误",
