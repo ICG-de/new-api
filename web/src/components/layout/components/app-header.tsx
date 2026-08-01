@@ -139,7 +139,8 @@ export function AppHeader({
                 loading={notifications.loading}
               />
             )}
-            <LanguageSwitcher />
+            {/* 语言切换器已隐藏 */}
+            {/* <LanguageSwitcher /> */}
             {showConfigDrawer && <ConfigDrawer />}
             {showProfileDropdown && <ProfileDropdown />}
           </div>

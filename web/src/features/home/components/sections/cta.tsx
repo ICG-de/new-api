@@ -22,6 +22,8 @@ import { useTranslation } from 'react-i18next'
 
 import { AnimateInView } from '@/components/animate-in-view'
 import { Button } from '@/components/ui/button'
+import { useCurrentTheme } from '@/hooks/use-current-theme'
+import { cn } from '@/lib/utils'
 
 interface CTAProps {
   className?: string
@@ -30,6 +32,7 @@ interface CTAProps {
 
 export function CTA(props: CTAProps) {
   const { t } = useTranslation()
+  const { isCyberTech } = useCurrentTheme()
 
   if (props.isAuthenticated) {
     return null
@@ -40,12 +43,20 @@ export function CTA(props: CTAProps) {
       {/* Gradient mesh background */}
       <div
         aria-hidden
-        className='absolute inset-0 -z-10 opacity-20 dark:opacity-[0.08]'
+        className={cn(
+          'absolute inset-0 -z-10',
+          isCyberTech ? 'opacity-30 dark:opacity-20' : 'opacity-20 dark:opacity-[0.08]'
+        )}
         style={{
-          background: [
-            'radial-gradient(ellipse 50% 50% at 30% 50%, oklch(0.7 0.15 250 / 70%) 0%, transparent 70%)',
-            'radial-gradient(ellipse 40% 40% at 70% 40%, oklch(0.65 0.12 200 / 50%) 0%, transparent 70%)',
-          ].join(', '),
+          background: isCyberTech
+            ? [
+                'radial-gradient(ellipse 50% 50% at 30% 50%, rgba(245, 200, 98, 0.2), transparent 70%)',
+                'radial-gradient(ellipse 40% 40% at 70% 40%, rgba(0, 255, 157, 0.15), transparent 70%)',
+              ].join(', ')
+            : [
+                'radial-gradient(ellipse 50% 50% at 30% 50%, oklch(0.7 0.15 250 / 70%) 0%, transparent 70%)',
+                'radial-gradient(ellipse 40% 40% at 70% 40%, oklch(0.65 0.12 200 / 50%) 0%, transparent 70%)',
+              ].join(', '),
         }}
       />
 
@@ -56,7 +67,11 @@ export function CTA(props: CTAProps) {
         <h2 className='text-2xl leading-tight font-bold tracking-tight md:text-4xl'>
           {t('Ready to simplify')}
           <br />
-          <span className='bg-gradient-to-r from-blue-400 via-violet-400 to-purple-500 bg-clip-text text-transparent'>
+          <span className={cn(
+            isCyberTech
+              ? 'text-primary font-bold'
+              : 'bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-violet-400 to-purple-500'
+          )}>
             {t('your AI integration?')}
           </span>
         </h2>
@@ -66,13 +81,24 @@ export function CTA(props: CTAProps) {
           )}
         </p>
         <div className='mt-8 flex items-center justify-center gap-3'>
-          <Button className='group rounded-lg' render={<Link to='/sign-up' />}>
+          <Button
+            className={cn(
+              'group rounded-lg',
+              isCyberTech && 'btn-cyber-primary glow-gold-sm'
+            )}
+            render={<Link to='/sign-up' />}
+          >
             {t('Get Started')}
             <ArrowRight className='ml-1 size-3.5 transition-transform duration-200 group-hover:translate-x-0.5' />
           </Button>
           <Button
             variant='outline'
-            className='border-border/50 hover:border-border hover:bg-muted/50 rounded-lg'
+            className={cn(
+              'rounded-lg',
+              isCyberTech
+                ? 'btn-cyber-secondary'
+                : 'border-border/50 hover:border-border hover:bg-muted/50'
+            )}
             render={<Link to='/pricing' />}
           >
             {t('View Pricing')}

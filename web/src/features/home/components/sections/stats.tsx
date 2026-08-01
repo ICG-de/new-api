@@ -19,6 +19,9 @@ For commercial licensing, please contact support@quantumnous.com
 import { useRef, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { useCurrentTheme } from '@/hooks/use-current-theme'
+import { cn } from '@/lib/utils'
+
 interface CounterProps {
   end: number
   suffix?: string
@@ -96,6 +99,7 @@ interface StatItem {
 
 export function Stats(_props: StatsProps) {
   const { t } = useTranslation()
+  const { isCyberTech } = useCurrentTheme()
 
   const stats: StatItem[] = [
     { end: 50, suffix: '+', label: t('upstream services integrated') },
@@ -105,7 +109,12 @@ export function Stats(_props: StatsProps) {
   ]
 
   return (
-    <div className='border-border/40 bg-muted/10 relative z-10 border-y'>
+    <div className={cn(
+      'relative z-10 border-y',
+      isCyberTech
+        ? 'border-primary/20 bg-primary/5 radial-gold'
+        : 'border-border/40 bg-muted/10'
+    )}>
       <div className='mx-auto max-w-6xl px-6 py-10 md:py-12'>
         <div className='grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12'>
           {stats.map((s) => (
@@ -113,7 +122,10 @@ export function Stats(_props: StatsProps) {
               key={s.label}
               className='flex flex-col items-center text-center'
             >
-              <span className='text-2xl font-bold tracking-tight md:text-3xl'>
+              <span className={cn(
+                'text-2xl font-bold tracking-tight md:text-3xl',
+                isCyberTech && 'text-primary-emphasis'
+              )}>
                 <Counter end={s.end} suffix={s.suffix} decimals={s.decimals} />
               </span>
               <span className='text-muted-foreground mt-1.5 text-xs'>

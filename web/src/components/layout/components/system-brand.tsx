@@ -69,7 +69,7 @@ export function SystemBrand(props: SystemBrandProps) {
           <img
             src={logo}
             alt={t('Logo')}
-            className='size-full rounded-md object-cover'
+            className='size-full rounded-md object-contain'
           />
         </div>
         <span className='max-w-[12rem] truncate'>{name}</span>

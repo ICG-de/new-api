@@ -29,6 +29,8 @@ import {
 import { useTranslation } from 'react-i18next'
 
 import { AnimateInView } from '@/components/animate-in-view'
+import { useCurrentTheme } from '@/hooks/use-current-theme'
+import { cn } from '@/lib/utils'
 
 interface FeaturesProps {
   className?: string
@@ -36,6 +38,7 @@ interface FeaturesProps {
 
 export function Features(_props: FeaturesProps) {
   const { t } = useTranslation()
+  const { isCyberTech } = useCurrentTheme()
 
   const features = [
     {
@@ -49,7 +52,7 @@ export function Features(_props: FeaturesProps) {
       icon: <Zap className='size-4 text-blue-400' />,
       visual: (
         <div className='mt-4 grid grid-cols-3 gap-2'>
-          {['OpenAI', 'Claude', 'Gemini', 'DeepSeek', 'Qwen', 'Llama'].map(
+          {['DeepSeek', 'Qwen', 'Kimi', 'GLM', 'Minimax', 'Mimo'].map(
             (name) => (
               <div
                 key={name}
@@ -194,16 +197,32 @@ export function Features(_props: FeaturesProps) {
         </AnimateInView>
 
         {/* Bento grid */}
-        <div className='border-border/40 bg-border/40 grid gap-px overflow-hidden rounded-xl border md:grid-cols-3'>
+        <div className={cn(
+          'grid gap-px overflow-hidden rounded-xl border md:grid-cols-3',
+          isCyberTech
+            ? 'border-primary/30 bg-primary/30'
+            : 'border-border/40 bg-border/40'
+        )}>
           {features.map((f, i) => (
             <AnimateInView
               key={f.id}
               delay={i * 100}
               animation='scale-in'
-              className={`bg-background group hover:bg-muted/20 p-7 transition-colors duration-300 md:p-8 ${f.span}`}
+              className={cn(
+                'group p-7 transition-colors duration-300 md:p-8',
+                f.span,
+                isCyberTech
+                  ? 'bg-background hover:glass-card'
+                  : 'bg-background hover:bg-muted/20'
+              )}
             >
               <div className='mb-3 flex items-center gap-3'>
-                <span className='border-border/40 bg-muted text-muted-foreground flex size-7 items-center justify-center rounded-md border text-[10px] font-semibold tabular-nums'>
+                <span className={cn(
+                  'flex size-7 items-center justify-center rounded-md border text-[10px] font-semibold tabular-nums',
+                  isCyberTech
+                    ? 'border-primary/40 bg-primary/10 text-primary'
+                    : 'border-border/40 bg-muted text-muted-foreground'
+                )}>
                   {f.num}
                 </span>
                 <h3 className='text-sm font-semibold'>{f.title}</h3>
@@ -225,7 +244,12 @@ export function Features(_props: FeaturesProps) {
               animation='fade-up'
               className='flex flex-col items-center text-center'
             >
-              <div className='text-muted-foreground border-border/50 bg-muted/30 group-hover:text-foreground mb-3 flex size-12 items-center justify-center rounded-xl border transition-colors'>
+              <div className={cn(
+                'mb-3 flex size-12 items-center justify-center rounded-xl border transition-colors',
+                isCyberTech
+                  ? 'border-primary/30 bg-primary/10 text-primary group-hover:text-primary'
+                  : 'text-muted-foreground border-border/50 bg-muted/30 group-hover:text-foreground'
+              )}>
                 {f.icon}
               </div>
               <h3 className='mb-1.5 text-sm font-semibold'>{f.title}</h3>

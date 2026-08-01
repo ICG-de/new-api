@@ -16,26 +16,29 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { SectionPageLayout } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useCurrentTheme } from '@/hooks/use-current-theme'
+import { cn } from '@/lib/utils'
 
-import { listDeployments } from './api'
+import { getModels, getVendors, listDeployments } from './api'
 import { DeploymentAccessGuard } from './components/deployment-access-guard'
 import { DeploymentsTable } from './components/deployments-table'
 import { CreateDeploymentDrawer } from './components/dialogs/create-deployment-drawer'
 import { ModelsDialogs } from './components/models-dialogs'
 import { ModelsPrimaryButtons } from './components/models-primary-buttons'
 import { ModelsProvider, useModels } from './components/models-provider'
+import { ModelsStats } from './components/models-stats'
 import { ModelsTable } from './components/models-table'
 import { useModelDeploymentSettings } from './hooks/use-model-deployment-settings'
-import { deploymentsQueryKeys } from './lib'
+import { deploymentsQueryKeys, modelsQueryKeys, vendorsQueryKeys } from './lib'
 import {
   type ModelsSectionId,
   MODELS_DEFAULT_SECTION,
@@ -57,12 +60,41 @@ function ModelsContent() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { tabCategory, setTabCategory } = useModels()
+  const { isCyberTech } = useCurrentTheme()
   const params = route.useParams()
   const activeSection = (params.section ??
     MODELS_DEFAULT_SECTION) as ModelsSectionId
 
   // Deployment create dialog state
   const [createDeploymentOpen, setCreateDeploymentOpen] = useState(false)
+
+  // Fetch stats data for metadata section
+  const { data: modelsData } = useQuery({
+    queryKey: modelsQueryKeys.list({ p: 1, page_size: 1 }),
+    queryFn: () => getModels({ p: 1, page_size: 1 }),
+    enabled: activeSection === 'metadata',
+  })
+
+  const { data: vendorsData } = useQuery({
+    queryKey: vendorsQueryKeys.list(),
+    queryFn: () => getVendors({ page_size: 1000 }),
+    enabled: activeSection === 'metadata',
+  })
+
+  const statsData = useMemo(() => {
+    const items = modelsData?.data?.items || []
+    const total = modelsData?.data?.total || 0
+    const activeCount = items.filter((m) => m.status === 1).length
+    const syncedCount = items.filter((m) => m.sync_official === 1).length
+    const vendorsCount = vendorsData?.data?.items?.length || 0
+
+    return {
+      totalModels: total,
+      activeModels: activeCount,
+      totalVendors: vendorsCount,
+      syncedModels: syncedCount,
+    }
+  }, [modelsData, vendorsData])
 
   // keep context state in sync (for components that rely on it)
   useEffect(() => {
@@ -98,16 +130,48 @@ function ModelsContent() {
           )}
         </SectionPageLayout.Actions>
         <SectionPageLayout.Content>
-          <div className='flex h-full min-h-0 flex-col gap-4'>
+          <div className='flex h-full min-h-0 flex-col gap-6'>
+            {/* Stats Cards - Only show for metadata section */}
+            {activeSection === 'metadata' && (
+              <div
+                className={cn(
+                  'transition-all',
+                  isCyberTech && 'animate-in fade-in-50 duration-500'
+                )}
+              >
+                <ModelsStats
+                  totalModels={statsData.totalModels}
+                  activeModels={statsData.activeModels}
+                  totalVendors={statsData.totalVendors}
+                  syncedModels={statsData.syncedModels}
+                />
+              </div>
+            )}
+
+            {/* Tabs */}
             <Tabs value={activeSection} onValueChange={handleSectionChange}>
-              <TabsList className='max-w-full flex-wrap justify-start group-data-horizontal/tabs:h-auto'>
+              <TabsList
+                className={cn(
+                  'max-w-full flex-wrap justify-start group-data-horizontal/tabs:h-auto',
+                  isCyberTech && 'glass-card border-primary/20'
+                )}
+              >
                 {MODELS_SECTION_IDS.map((section) => (
-                  <TabsTrigger key={section} value={section}>
+                  <TabsTrigger
+                    key={section}
+                    value={section}
+                    className={cn(
+                      isCyberTech &&
+                        'data-[state=active]:bg-primary/10 data-[state=active]:text-primary'
+                    )}
+                  >
                     {t(SECTION_META[section].titleKey)}
                   </TabsTrigger>
                 ))}
               </TabsList>
             </Tabs>
+
+            {/* Main Content */}
             <div className='min-h-0 flex-1'>
               {activeSection === 'metadata' ? (
                 <ModelsTable />
