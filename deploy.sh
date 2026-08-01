@@ -130,8 +130,8 @@ pull_code() {
 
     if [ -d ".git" ]; then
         git fetch origin
-        git checkout zhangsubo/feat-design-md-peopleopen
-        git pull origin zhangsubo/feat-design-md-peopleopen
+        git checkout main
+        git pull origin main
         print_success "代码更新完成"
     else
         print_warning "不是 Git 仓库，跳过代码拉取"
