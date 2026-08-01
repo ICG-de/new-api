@@ -38,6 +38,20 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# 检测并设置 Docker Compose 命令
+detect_docker_compose() {
+    if command -v docker-compose &> /dev/null; then
+        DOCKER_COMPOSE="docker-compose"
+    elif docker compose version &> /dev/null 2>&1; then
+        DOCKER_COMPOSE="docker compose"
+    else
+        print_error "Docker Compose 未安装或无法使用"
+        print_info "请安装 Docker Compose 或确保 'docker compose' 可用"
+        exit 1
+    fi
+    print_info "使用 Docker Compose 命令: $DOCKER_COMPOSE"
+}
+
 # 检查必要的命令
 check_requirements() {
     print_info "检查系统环境..."
@@ -47,10 +61,7 @@ check_requirements() {
         exit 1
     fi
 
-    if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
-        print_error "Docker Compose 未安装，请先安装 Docker Compose"
-        exit 1
-    fi
+    detect_docker_compose
 
     print_success "系统环境检查通过"
 }
@@ -143,7 +154,7 @@ stop_old_services() {
     print_info "停止旧服务..."
 
     if docker ps -a | grep -q "new-api-peopledata"; then
-        docker-compose -f docker-compose.prod.yml --env-file .env.prod down
+        $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod down
         print_success "旧服务已停止"
     else
         print_info "没有运行中的服务"
@@ -155,7 +166,7 @@ build_image() {
     print_info "开始构建 Docker 镜像..."
     print_info "这可能需要几分钟时间，请耐心等待..."
 
-    docker-compose -f docker-compose.prod.yml --env-file .env.prod build --no-cache
+    $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod build --no-cache
 
     print_success "Docker 镜像构建完成"
 }
@@ -164,7 +175,7 @@ build_image() {
 start_services() {
     print_info "启动服务..."
 
-    docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
+    $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod up -d
 
     print_success "服务启动成功"
 }
@@ -194,7 +205,7 @@ wait_for_health() {
 # 显示服务状态
 show_status() {
     print_info "服务状态:"
-    docker-compose -f docker-compose.prod.yml --env-file .env.prod ps
+    $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod ps
 }
 
 # 显示访问信息
@@ -213,10 +224,10 @@ show_access_info() {
     echo "  密码:   请查看 .env.prod 中的 INITIAL_ROOT_PASSWORD"
     echo ""
     echo "常用命令:"
-    echo "  查看日志: docker-compose -f docker-compose.prod.yml --env-file .env.prod logs -f"
-    echo "  停止服务: docker-compose -f docker-compose.prod.yml --env-file .env.prod down"
-    echo "  重启服务: docker-compose -f docker-compose.prod.yml --env-file .env.prod restart"
-    echo "  查看状态: docker-compose -f docker-compose.prod.yml --env-file .env.prod ps"
+    echo "  查看日志: $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod logs -f"
+    echo "  停止服务: $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod down"
+    echo "  重启服务: $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod restart"
+    echo "  查看状态: $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod ps"
     echo ""
     print_warning "⚠️  首次登录后请立即修改管理员密码！"
     echo "========================================="
@@ -225,7 +236,7 @@ show_access_info() {
 # 显示日志
 show_logs() {
     print_info "显示最近日志 (按 Ctrl+C 退出):"
-    docker-compose -f docker-compose.prod.yml --env-file .env.prod logs --tail=50 -f
+    $DOCKER_COMPOSE -f docker-compose.prod.yml --env-file .env.prod logs --tail=50 -f
 }
 
 # 主函数
