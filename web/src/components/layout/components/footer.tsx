@@ -136,17 +136,12 @@ function ProjectAttribution(props: { currentYear: number; inline?: boolean }) {
       >
         {t('New API')}
       </a>
-      . {t(NEW_API_FOOTER_ATTRIBUTION_KEY)}
     </span>
   )
   if (props.inline) {
     return content
   }
-  return (
-    <div className='text-muted-foreground/45 text-center text-xs sm:text-right'>
-      {content}
-    </div>
-  )
+  return null
 }
 
 export function Footer(props: FooterProps) {

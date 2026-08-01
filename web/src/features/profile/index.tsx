@@ -63,10 +63,11 @@ export function Profile() {
                   loading={loading}
                   onProfileUpdate={refreshProfile}
                 />
-                <LanguagePreferencesCard
+                {/* 语言偏好设置已隐藏 */}
+                {/* <LanguagePreferencesCard
                   profile={profile}
                   onProfileUpdate={refreshProfile}
-                />
+                /> */}
                 <ProfileSecurityCard profile={profile} loading={loading} />
                 <LoginSessionsCard />
               </div>

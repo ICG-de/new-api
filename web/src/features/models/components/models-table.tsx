@@ -23,7 +23,9 @@ import { useTranslation } from 'react-i18next'
 
 import { DataTablePage, useDataTable } from '@/components/data-table'
 import { useMediaQuery } from '@/hooks'
+import { useCurrentTheme } from '@/hooks/use-current-theme'
 import { useTableUrlState } from '@/hooks/use-table-url-state'
+import { cn } from '@/lib/utils'
 
 import { getModels, searchModels, getVendors } from '../api'
 import {
@@ -41,6 +43,7 @@ const route = getRouteApi('/_authenticated/models/$section')
 export function ModelsTable() {
   const { t } = useTranslation()
   const { selectedVendor } = useModels()
+  const { isCyberTech } = useCurrentTheme()
   const isMobile = useMediaQuery('(max-width: 640px)')
 
   // URL state management
@@ -189,41 +192,50 @@ export function ModelsTable() {
   ]
 
   return (
-    <DataTablePage
-      table={table}
-      columns={columns}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      emptyTitle={t('No Models Found')}
-      emptyDescription={t(
-        'No models available. Create your first model to get started.'
+    <div
+      className={cn(
+        'rounded-2xl border transition-all',
+        isCyberTech
+          ? 'glass-card border-primary/30 hover:border-primary/40'
+          : 'border-border'
       )}
-      skeletonKeyPrefix='model-skeleton'
-      applyHeaderSize
-      toolbarProps={{
-        searchPlaceholder: t('Filter by model name...'),
-        filters: [
-          {
-            columnId: 'status',
-            title: t('Status'),
-            options: [...getModelStatusOptions(t)],
-            singleSelect: true,
-          },
-          {
-            columnId: 'vendor_id',
-            title: t('Vendor'),
-            options: vendorFilterOptions,
-            singleSelect: true,
-          },
-          {
-            columnId: 'sync_official',
-            title: t('Official Sync'),
-            options: [...getSyncStatusOptions(t)],
-            singleSelect: true,
-          },
-        ],
-      }}
-      bulkActions={<DataTableBulkActions table={table} />}
-    />
+    >
+      <DataTablePage
+        table={table}
+        columns={columns}
+        isLoading={isLoading}
+        isFetching={isFetching}
+        emptyTitle={t('No Models Found')}
+        emptyDescription={t(
+          'No models available. Create your first model to get started.'
+        )}
+        skeletonKeyPrefix='model-skeleton'
+        applyHeaderSize
+        toolbarProps={{
+          searchPlaceholder: t('Filter by model name...'),
+          filters: [
+            {
+              columnId: 'status',
+              title: t('Status'),
+              options: [...getModelStatusOptions(t)],
+              singleSelect: true,
+            },
+            {
+              columnId: 'vendor_id',
+              title: t('Vendor'),
+              options: vendorFilterOptions,
+              singleSelect: true,
+            },
+            {
+              columnId: 'sync_official',
+              title: t('Official Sync'),
+              options: [...getSyncStatusOptions(t)],
+              singleSelect: true,
+            },
+          ],
+        }}
+        bulkActions={<DataTableBulkActions table={table} />}
+      />
+    </div>
   )
 }

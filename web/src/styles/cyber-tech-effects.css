@@ -1,0 +1,511 @@
+/*
+Copyright (C) 2023-2026 QuantumNous
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+For commercial licensing, please contact support@quantumnous.com
+*/
+
+/**
+ * Cyber Tech Theme Effects
+ *
+ * Special effects and utilities for the Cyber Tech theme preset.
+ * These styles are only active when data-theme-preset="cyber-tech" is set.
+ */
+
+[data-theme-preset='cyber-tech'] {
+  /* ── Easing Curves (per design.md) ─────────────────────────────────── */
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Transparency System (per design.md) ───────────────────────────── */
+
+  --white-5: rgba(255, 255, 255, 0.05);
+  --white-8: rgba(255, 255, 255, 0.08);
+  --white-10: rgba(255, 255, 255, 0.1);
+  --white-15: rgba(255, 255, 255, 0.15);
+  --white-20: rgba(255, 255, 255, 0.2);
+
+  --gold-10: rgba(245, 200, 98, 0.1);
+  --gold-20: rgba(245, 200, 98, 0.2);
+  --gold-30: rgba(245, 200, 98, 0.3);
+  --gold-40: rgba(245, 200, 98, 0.4);
+
+  --red-10: rgba(230, 50, 38, 0.1);
+  --red-20: rgba(230, 50, 38, 0.2);
+  --red-30: rgba(230, 50, 38, 0.3);
+
+  /* ── Background Layer System (per design.md) ───────────────────────── */
+
+  --bg-deepest: oklch(0.06 0.015 250);
+  --bg-deeper: oklch(0.08 0.018 250);
+  --bg-deep: oklch(0.09 0.019 250);
+  --bg-elevated: oklch(0.15 0.025 250);
+  --bg-surface: oklch(0.18 0.03 250);
+  --bg-panel: oklch(0.14 0.025 250);
+  --bg-hover: oklch(0.16 0.027 250);
+
+  /* ── Glow Effects ──────────────────────────────────────────────────── */
+
+  /* ── Glow Effects ──────────────────────────────────────────────────── */
+
+  .glow-gold {
+    box-shadow: 0 4px 16px var(--gold-30);
+  }
+
+  .glow-gold-sm {
+    box-shadow: 0 2px 8px var(--gold-20);
+  }
+
+  .glow-gold-lg {
+    box-shadow: 0 8px 24px var(--gold-40);
+  }
+
+  .glow-red {
+    box-shadow: 0 4px 16px var(--red-30);
+  }
+
+  .glow-green {
+    box-shadow: 0 4px 16px rgba(0, 255, 157, 0.3);
+  }
+
+  /* ── Gradient Backgrounds ──────────────────────────────────────────── */
+
+  .hero-gradient {
+    background: radial-gradient(
+      600px 260px at 50% 0%,
+      var(--gold-10),
+      transparent
+    );
+  }
+
+  .gold-gradient-bg {
+    background: linear-gradient(135deg,
+      var(--gold-10),
+      var(--bg-deepest)
+    );
+  }
+
+  .radial-gold {
+    background: radial-gradient(
+      circle,
+      var(--gold-10),
+      transparent 65%
+    );
+  }
+
+  .radial-green {
+    background: radial-gradient(
+      ellipse 80% 60% at 50% -20%,
+      rgba(0, 255, 157, 0.15),
+      transparent 70%
+    );
+  }
+
+  /* ── Glass Effects ─────────────────────────────────────────────────── */
+
+  .glass-card {
+    background: var(--white-5);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--white-10);
+    will-change: backdrop-filter;
+    transform: translateZ(0);
+  }
+
+  .glass-card:hover {
+    background: var(--white-8);
+    border-color: var(--gold-30);
+    backdrop-filter: blur(16px);
+    transform: translateY(-2px);
+    transition: all 0.3s var(--ease-out-quart);
+  }
+
+  .glass-panel {
+    background: var(--bg-deeper);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--white-8);
+    will-change: backdrop-filter;
+  }
+
+  /* ── Text Effects ──────────────────────────────────────────────────── */
+
+  /* Text emphasis through color + weight (no gradients per design.md) */
+  .text-primary-emphasis {
+    color: oklch(0.75 0.15 45);
+    font-weight: 700;
+  }
+
+  .text-primary-strong {
+    color: oklch(0.75 0.15 45);
+    font-weight: 600;
+  }
+
+  .text-secondary-emphasis {
+    color: oklch(0.60 0.20 15);
+    font-weight: 600;
+  }
+
+  .text-glow-gold {
+    color: oklch(0.75 0.15 45);
+    text-shadow: 0 0 20px rgba(245, 200, 98, 0.3);
+  }
+
+  .text-glow-subtle {
+    text-shadow: 0 2px 8px rgba(245, 200, 98, 0.2);
+  }
+
+  /* ── Border Effects ────────────────────────────────────────────────── */
+
+  .border-gold-glow {
+    border: 1px solid rgba(245, 200, 98, 0.3);
+    box-shadow:
+      0 0 20px rgba(245, 200, 98, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .border-gold-glow:hover {
+    border-color: rgba(245, 200, 98, 0.5);
+    box-shadow:
+      0 0 30px rgba(245, 200, 98, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* ── Button Enhancements ───────────────────────────────────────────── */
+
+  .btn-cyber-primary {
+    background: linear-gradient(135deg, #f5c862, #d4a849);
+    color: oklch(0.08 0.02 250);
+    font-weight: 600;
+    transition: all 0.3s var(--ease-out-quart);
+  }
+
+  .btn-cyber-primary:hover {
+    background: linear-gradient(135deg, #ffd97d, #f5c862);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--gold-40);
+  }
+
+  .btn-cyber-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px var(--gold-30);
+    transition-duration: 0.1s;
+  }
+
+  .btn-cyber-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-cyber-secondary {
+    background: var(--white-8);
+    border: 1px solid var(--white-10);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s var(--ease-out-quart);
+  }
+
+  .btn-cyber-secondary:hover {
+    background: var(--white-15);
+    border-color: var(--gold-30);
+  }
+
+  .btn-cyber-secondary:active {
+    background: var(--white-10);
+    transform: scale(0.98);
+    transition-duration: 0.1s;
+  }
+
+  .btn-cyber-secondary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── Card Enhancements ─────────────────────────────────────────────── */
+
+  .card-cyber {
+    background: oklch(0.12 0.022 250);
+    border: 1px solid var(--white-8);
+    border-radius: 0.75rem;
+    transition: all 0.3s var(--ease-out-expo);
+  }
+
+  .card-cyber:hover {
+    border-color: var(--gold-30);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  .card-cyber-highlight {
+    background: linear-gradient(135deg,
+      var(--gold-10),
+      var(--bg-deeper)
+    );
+    border: 1px solid var(--gold-30);
+    box-shadow:
+      0 4px 16px var(--gold-10),
+      inset 0 1px 0 var(--white-5);
+  }
+
+  .card-cyber-flat {
+    background: oklch(0.12 0.022 250);
+    border: none;
+    border-radius: 0.75rem;
+  }
+
+  .card-cyber-sunken {
+    background: var(--bg-deeper);
+    border: 1px solid var(--white-5);
+    border-radius: 0.75rem;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-cyber-floating {
+    background: var(--bg-elevated);
+    border: 1px solid var(--white-10);
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ── Table Enhancements ────────────────────────────────────────────── */
+
+  .table-cyber thead {
+    background: oklch(0.12 0.022 250);
+    border-bottom: 1px solid var(--gold-20);
+  }
+
+  .table-cyber thead th {
+    color: oklch(0.75 0.15 45);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1rem 1.25rem;
+  }
+
+  .table-cyber tbody tr {
+    border-bottom: 1px solid var(--white-8);
+    transition: background 0.2s var(--ease-out-quart);
+  }
+
+  .table-cyber tbody tr:hover {
+    background: var(--white-5);
+  }
+
+  .table-cyber tbody td {
+    padding: 0.875rem 1.25rem;
+  }
+
+  .table-cyber-striped tbody tr:nth-child(even) {
+    background: var(--white-5);
+  }
+
+  .table-cyber-compact td,
+  .table-cyber-compact th {
+    padding: 0.5rem 1rem;
+  }
+
+  .table-cyber-relaxed td,
+  .table-cyber-relaxed th {
+    padding: 1rem 1.5rem;
+  }
+
+  /* ── Input Enhancements ────────────────────────────────────────────── */
+
+  .input-cyber {
+    background: oklch(0.15 0.02 250);
+    border: 1px solid var(--white-10);
+    color: oklch(0.65 0.08 250);
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s var(--ease-out-quart);
+  }
+
+  .input-cyber:focus {
+    border-color: oklch(0.75 0.15 45);
+    outline: 2px solid var(--gold-20);
+    background: oklch(0.18 0.025 250);
+  }
+
+  .input-cyber::placeholder {
+    color: oklch(0.45 0.05 250);
+  }
+
+  .input-cyber:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .input-cyber-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .input-cyber-lg {
+    padding: 0.875rem 1.125rem;
+    font-size: 1.125rem;
+  }
+
+  .input-cyber-error {
+    border-color: oklch(0.60 0.22 15);
+    outline: 2px solid var(--red-20);
+  }
+
+  .input-cyber-success {
+    border-color: oklch(0.62 0.18 155);
+    outline: 2px solid rgba(52, 211, 153, 0.2);
+  }
+
+  /* ── Badge Enhancements ────────────────────────────────────────────── */
+
+  .badge-cyber-success {
+    background: rgba(52, 211, 153, 0.1);
+    color: oklch(0.62 0.18 155);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .badge-cyber-warning {
+    background: rgba(251, 191, 36, 0.1);
+    color: oklch(0.78 0.15 65);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .badge-cyber-error {
+    background: var(--red-10);
+    color: oklch(0.60 0.22 15);
+    border: 1px solid var(--red-30);
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .badge-cyber-info {
+    background: rgba(96, 165, 250, 0.1);
+    color: oklch(0.68 0.15 250);
+    border: 1px solid rgba(96, 165, 250, 0.3);
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* ── Animation Enhancements ────────────────────────────────────────── */
+
+  @keyframes pulse-gold {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 20px var(--gold-30);
+    }
+    50% {
+      opacity: 0.8;
+      box-shadow: 0 0 40px rgba(245, 200, 98, 0.5);
+    }
+  }
+
+  .animate-pulse-gold {
+    animation: pulse-gold 2s var(--ease-out-quint) infinite;
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      box-shadow: 0 0 20px var(--gold-20);
+    }
+    50% {
+      box-shadow: 0 0 40px var(--gold-40);
+    }
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 3s var(--ease-out-expo) infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 0.6s linear infinite;
+  }
+
+  /* ── Utility Classes ───────────────────────────────────────────────── */
+
+  .cyber-divide {
+    border-color: var(--white-10);
+  }
+
+  .cyber-text-muted {
+    color: oklch(0.55 0.05 250);
+  }
+
+  .cyber-bg-elevated {
+    background: var(--bg-elevated);
+  }
+
+  .cyber-bg-surface {
+    background: var(--bg-surface);
+  }
+
+  .cyber-bg-panel {
+    background: var(--bg-panel);
+  }
+
+  .cyber-bg-hover {
+    background: var(--bg-hover);
+  }
+}
+
+/* ── Dark Mode Specifics ───────────────────────────────────────────── */
+
+.dark [data-theme-preset='cyber-tech'] {
+  /* Enhanced effects for dark mode */
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--white-8);
+  }
+
+  .glass-card:hover {
+    background: var(--white-5);
+    backdrop-filter: blur(16px);
+  }
+
+  .card-cyber {
+    background: oklch(0.10 0.02 250);
+  }
+
+  .input-cyber {
+    background: oklch(0.12 0.022 250);
+  }
+
+  .btn-cyber-secondary {
+    background: var(--white-5);
+  }
+
+  .btn-cyber-secondary:hover {
+    background: var(--white-10);
+  }
+}

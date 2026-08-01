@@ -290,7 +290,8 @@ export function Wallet(props: WalletProps) {
           <div className='mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-5'>
             <WalletStatsCard user={user} loading={userLoading} />
 
-            <div
+            {/* 添加资金功能已隐藏 */}
+            {/* <div
               className={
                 showSubscriptionPanel
                   ? 'grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] xl:items-start'
@@ -337,9 +338,10 @@ export function Wallet(props: WalletProps) {
                 userQuota={user?.quota}
                 onPurchaseSuccess={fetchUser}
               />
-            </div>
+            </div> */}
 
-            <AffiliateRewardsCard
+            {/* 推荐计划功能已隐藏 */}
+            {/* <AffiliateRewardsCard
               user={user}
               affiliateLink={affiliateLink}
               onTransfer={() => setTransferDialogOpen(true)}
@@ -347,7 +349,7 @@ export function Wallet(props: WalletProps) {
                 topupInfo?.payment_compliance_confirmed !== false
               }
               loading={affiliateLoading}
-            />
+            /> */}
           </div>
         </SectionPageLayout.Content>
       </SectionPageLayout>

@@ -136,7 +136,7 @@ const DEFAULT_FORMAT_OPTIONS: ResolvedCurrencyFormatOptions = {
   abbreviate: true,
   minimumNonZero: 0,
   compact: false,
-  showSymbol: true,
+  showSymbol: false,
   locale: undefined,
 }
 

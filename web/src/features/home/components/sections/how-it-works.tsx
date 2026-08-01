@@ -20,9 +20,12 @@ import { Settings, Zap, BarChart3 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { AnimateInView } from '@/components/animate-in-view'
+import { useCurrentTheme } from '@/hooks/use-current-theme'
+import { cn } from '@/lib/utils'
 
 export function HowItWorks() {
   const { t } = useTranslation()
+  const { isCyberTech } = useCurrentTheme()
 
   const steps = [
     {
@@ -37,7 +40,7 @@ export function HowItWorks() {
       num: '2',
       title: t('Connect'),
       desc: t(
-        'Connect through OpenAI, Claude, Gemini, and other compatible API routes'
+        'Connect through compatible API routes'
       ),
       icon: <Zap className='size-6' strokeWidth={1.5} />,
     },
@@ -50,7 +53,10 @@ export function HowItWorks() {
   ]
 
   return (
-    <section className='border-border/40 relative z-10 border-t px-6 py-24 md:py-32'>
+    <section className={cn(
+      'relative z-10 border-t px-6 py-24 md:py-32',
+      isCyberTech ? 'border-primary/20' : 'border-border/40'
+    )}>
       <div className='mx-auto max-w-6xl'>
         <AnimateInView className='mb-16 text-center md:mb-20'>
           <p className='text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase'>
@@ -70,10 +76,20 @@ export function HowItWorks() {
               className='relative flex flex-col items-center text-center'
             >
               <div className='relative mb-6'>
-                <div className='text-muted-foreground border-border/50 bg-muted/30 flex size-16 items-center justify-center rounded-2xl border transition-colors'>
+                <div className={cn(
+                  'flex size-16 items-center justify-center rounded-2xl border transition-colors',
+                  isCyberTech
+                    ? 'border-primary/30 bg-primary/10 text-primary'
+                    : 'text-muted-foreground border-border/50 bg-muted/30'
+                )}>
                   {step.icon}
                 </div>
-                <div className='bg-foreground text-background absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full text-xs font-bold'>
+                <div className={cn(
+                  'absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full text-xs font-bold',
+                  isCyberTech
+                    ? 'bg-primary text-background'
+                    : 'bg-foreground text-background'
+                )}>
                   {step.num}
                 </div>
               </div>

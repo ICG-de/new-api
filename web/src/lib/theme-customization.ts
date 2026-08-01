@@ -43,6 +43,14 @@ export const THEME_PRESETS = [
     swatches: ['oklch(0.15 0 0)', 'oklch(0.99 0 0)'],
   },
   {
+    // Deep dark tech theme inspired by cyberpunk aesthetics with gold and red accents.
+    // Deep navy-black background paired with vibrant gold (#f5c862) and neon green (#00ff9d).
+    // Designed for data-driven interfaces with high contrast and futuristic vibe.
+    value: 'cyber-tech',
+    name: 'Cyber Tech',
+    swatches: ['oklch(0.10 0.02 250)', 'oklch(0.75 0.15 45)'],
+  },
+  {
     value: 'underground',
     name: 'Underground',
     swatches: ['oklch(0.5315 0.0694 156.19)', 'oklch(0.5748 0.0862 336.52)'],

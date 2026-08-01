@@ -256,14 +256,15 @@ export function PublicHeader(props: PublicHeaderProps) {
                 )
               })}
 
-              {(showLanguageSwitcher ||
-                showThemeSwitch ||
+              {(false ||
+                false ||
                 showNotifications) && (
                 <div className='bg-border/40 mx-2 h-4 w-px' />
               )}
 
-              {showLanguageSwitcher && <LanguageSwitcher />}
-              {showThemeSwitch && <ThemeSwitch />}
+              {/* 语言切换器和主题切换器已隐藏 */}
+              {/* {showLanguageSwitcher && <LanguageSwitcher />} */}
+              {/* {showThemeSwitch && <ThemeSwitch />} */}
               {showNotifications && (
                 <NotificationPopover
                   open={notifications.popoverOpen}
@@ -299,7 +300,8 @@ export function PublicHeader(props: PublicHeaderProps) {
 
             {/* Mobile: compact actions + hamburger */}
             <div className='flex items-center gap-2 sm:hidden'>
-              {showThemeSwitch && <ThemeSwitch />}
+              {/* 主题切换器已隐藏 */}
+              {/* {showThemeSwitch && <ThemeSwitch />} */}
               {showAuthButtons && !loading && isAuthenticated && (
                 <ProfileDropdown />
               )}
