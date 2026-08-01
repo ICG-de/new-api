@@ -72,14 +72,44 @@ check_config() {
         exit 1
     fi
 
-    # 检查是否修改了默认密码
-    if grep -q "CHANGE_THIS" .env.prod; then
-        print_warning "检测到 .env.prod 中包含默认密码！"
-        print_warning "请修改 .env.prod 中的以下内容:"
-        print_warning "  - POSTGRES_PASSWORD"
-        print_warning "  - REDIS_PASSWORD"
-        print_warning "  - SESSION_SECRET"
-        print_warning "  - INITIAL_ROOT_PASSWORD"
+    # 检查具体哪些配置项未修改
+    local has_default_config=false
+    local unmodified_items=()
+
+    # 检查各个配置项（只检查配置值，忽略注释行）
+    if grep -v "^#" .env.prod | grep -q "POSTGRES_PASSWORD=CHANGE_THIS"; then
+        unmodified_items+=("POSTGRES_PASSWORD")
+        has_default_config=true
+    fi
+
+    if grep -v "^#" .env.prod | grep -q "REDIS_PASSWORD=CHANGE_THIS"; then
+        unmodified_items+=("REDIS_PASSWORD")
+        has_default_config=true
+    fi
+
+    if grep -v "^#" .env.prod | grep -q "SESSION_SECRET=CHANGE_THIS"; then
+        unmodified_items+=("SESSION_SECRET")
+        has_default_config=true
+    fi
+
+    if grep -v "^#" .env.prod | grep -q "INITIAL_ROOT_PASSWORD=CHANGE_THIS"; then
+        unmodified_items+=("INITIAL_ROOT_PASSWORD")
+        has_default_config=true
+    fi
+
+    if grep -v "^#" .env.prod | grep -q "CLICKHOUSE_PASSWORD=CHANGE_THIS"; then
+        unmodified_items+=("CLICKHOUSE_PASSWORD (可选)")
+        has_default_config=true
+    fi
+
+    # 如果有未修改的配置项，显示警告
+    if [ "$has_default_config" = true ]; then
+        print_warning "检测到以下配置项使用了默认值："
+        for item in "${unmodified_items[@]}"; do
+            print_warning "  ✗ $item"
+        done
+        echo ""
+        print_warning "建议修改这些配置项以确保系统安全"
         echo ""
         read -p "是否继续部署？(y/N) " -n 1 -r
         echo
@@ -87,6 +117,8 @@ check_config() {
             print_info "部署已取消"
             exit 0
         fi
+    else
+        print_success "所有必需配置项已修改"
     fi
 
     print_success "配置文件检查完成"
