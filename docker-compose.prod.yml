@@ -1,11 +1,10 @@
 # 人民数据城市词元工厂 - 生产环境 Docker Compose 配置
 #
 # 部署步骤:
-#   1. 修改下方的密码和配置
-#   2. docker-compose -f docker-compose.prod.yml up -d
-#   3. 访问 http://your-server-ip:3000
-#
-# ⚠️ 重要: 请务必修改所有默认密码！
+#   1. 复制 .env.prod.example 为 .env.prod
+#   2. 修改 .env.prod 中的密码和配置
+#   3. docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
+#   4. 访问 http://your-server-ip:3000
 
 version: '3.4'
 
@@ -19,28 +18,28 @@ services:
     restart: always
     command: --log-dir /app/logs
     ports:
-      - "3000:3000"
+      - "${APP_PORT:-3000}:3000"
     volumes:
       - ./data:/data
       - ./logs:/app/logs
     environment:
       # 数据库配置 - PostgreSQL
-      - SQL_DSN=postgresql://newapi:CHANGE_THIS_PASSWORD@postgres:5432/newapi_db
+      - SQL_DSN=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
 
       # Redis 配置
-      - REDIS_CONN_STRING=redis://:CHANGE_THIS_REDIS_PASSWORD@redis:6379
+      - REDIS_CONN_STRING=redis://:${REDIS_PASSWORD}@redis:6379
 
-      # 会话密钥 (请生成随机字符串)
-      - SESSION_SECRET=CHANGE_THIS_TO_RANDOM_STRING_MIN_32_CHARS
+      # 会话密钥
+      - SESSION_SECRET=${SESSION_SECRET}
 
-      # 管理员初始密码 (首次启动后请立即修改)
-      - INITIAL_ROOT_PASSWORD=CHANGE_THIS_ADMIN_PASSWORD
+      # 管理员初始密码
+      - INITIAL_ROOT_PASSWORD=${INITIAL_ROOT_PASSWORD}
 
       # 可选：ClickHouse 日志存储
-      # - LOG_SQL_DSN=clickhouse://default:CHANGE_THIS_CLICKHOUSE_PASSWORD@clickhouse:9000/newapi_logs?dial_timeout=10s&max_execution_time=60
+      # - LOG_SQL_DSN=clickhouse://default:${CLICKHOUSE_PASSWORD}@clickhouse:9000/${CLICKHOUSE_DB}?dial_timeout=10s&max_execution_time=60
 
       # 时区设置
-      - TZ=Asia/Shanghai
+      - TZ=${TZ:-Asia/Shanghai}
 
     depends_on:
       - postgres
@@ -59,31 +58,31 @@ services:
     container_name: postgres-peopledata
     restart: always
     environment:
-      POSTGRES_USER: newapi
-      POSTGRES_PASSWORD: CHANGE_THIS_PASSWORD  # ⚠️ 请修改此密码
-      POSTGRES_DB: newapi_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: /var/lib/postgresql/data/pgdata
-      TZ: Asia/Shanghai
+      TZ: ${TZ:-Asia/Shanghai}
     volumes:
       - pg_data:/var/lib/postgresql/data
     networks:
       - new-api-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U newapi"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
     # 如需外部访问，取消注释下方端口映射
     # ports:
-    #   - "5432:5432"
+    #   - "${POSTGRES_PORT:-5432}:5432"
 
   redis:
     image: redis:7-alpine
     container_name: redis-peopledata
     restart: always
-    command: redis-server --requirepass CHANGE_THIS_REDIS_PASSWORD --appendonly yes
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
     environment:
-      TZ: Asia/Shanghai
+      TZ: ${TZ:-Asia/Shanghai}
     volumes:
       - redis_data:/data
     networks:
@@ -95,7 +94,7 @@ services:
       retries: 5
     # 如需外部访问，取消注释下方端口映射
     # ports:
-    #   - "6379:6379"
+    #   - "${REDIS_PORT:-6379}:6379"
 
   # 可选：ClickHouse 日志存储（用于大规模日志查询）
   # 如果不需要，可以删除此服务
@@ -104,11 +103,11 @@ services:
   #   container_name: clickhouse-peopledata
   #   restart: always
   #   environment:
-  #     CLICKHOUSE_DB: newapi_logs
-  #     CLICKHOUSE_USER: default
-  #     CLICKHOUSE_PASSWORD: CHANGE_THIS_CLICKHOUSE_PASSWORD  # ⚠️ 请修改此密码
+  #     CLICKHOUSE_DB: ${CLICKHOUSE_DB}
+  #     CLICKHOUSE_USER: ${CLICKHOUSE_USER:-default}
+  #     CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
   #     CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
-  #     TZ: Asia/Shanghai
+  #     TZ: ${TZ:-Asia/Shanghai}
   #   volumes:
   #     - clickhouse_data:/var/lib/clickhouse
   #   networks:
@@ -120,8 +119,8 @@ services:
   #     retries: 3
   #   # 如需外部访问，取消注释下方端口映射
   #   # ports:
-  #   #   - "8123:8123"  # HTTP interface
-  #   #   - "9000:9000"  # Native interface
+  #   #   - "${CLICKHOUSE_HTTP_PORT:-8123}:8123"  # HTTP interface
+  #   #   - "${CLICKHOUSE_NATIVE_PORT:-9000}:9000"  # Native interface
 
 volumes:
   pg_data:
